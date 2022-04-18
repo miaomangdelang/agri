@@ -1,5 +1,8 @@
 package nl.anlizi.agri.pfsc.transfer.input;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+
 import java.io.Serializable;
 
 /**
@@ -8,6 +11,8 @@ import java.io.Serializable;
  * @author Join.Yao (pathinfuture@163.com)
  * @date 2022/04/17 20:20
  */
+@Data
+@AllArgsConstructor
 public class BaseInput implements Serializable {
 
     /**

@@ -1,0 +1,13 @@
+spring:
+  profiles:
+    active: develop
+
+zheos:
+  elasticsearch:
+    clusterName: docker-cluster
+    metadataIndex: pfsc
+    urlList:
+      - 192.168.1.53:9200
+cron:
+  pfsc: 0 0 23 * * ?
+
