@@ -1,8 +1,9 @@
-elasticsearch:
-  clusterName: docker-cluster
-  metadataIndex: pfsc-develop
-  urlList:
-    - 192.168.1.53:9200
+zheos:
+  elasticsearch:
+    clusterName: docker-cluster
+    metadataIndex: pfsc-develop
+    urlList:
+      - 192.168.1.53:9200
 cron:
   pfsc: 0 0 23 * * ?
 

@@ -13,10 +13,21 @@ public class ApplicationConstant {
     /**
      * 默认每页数据量
      */
-    public static final int DEFAULT_PAGE_SIZE = 10;
+    public static final int DEFAULT_PAGE_SIZE = 1000;
 
     /**
      * 创建时间
      */
     public static final String CREATE_TIME = "createTime";
+
+    /**
+     * 创建时间格式化
+     */
+    public static final String CREATE_DATE = "createDate";
+
+    /**
+     * 格式化时间
+     */
+    public static String DATETIME_FORMAT = "yyyy-MM-dd";
+
 }
