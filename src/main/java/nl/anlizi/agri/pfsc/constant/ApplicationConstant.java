@@ -8,6 +8,9 @@ package nl.anlizi.agri.pfsc.constant;
  */
 public class ApplicationConstant {
 
+    /**
+     * 农业信息网地址
+     */
     public static final String PFSC_URL = "http://pfsc.agri.cn/api/priceQuotationController/pageList?key=&order=";
 
     /**

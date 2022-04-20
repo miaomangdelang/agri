@@ -6,12 +6,13 @@ import nl.anlizi.agri.pfsc.constant.ApplicationConstant;
 import nl.anlizi.agri.pfsc.service.PfscService;
 import nl.anlizi.agri.pfsc.transfer.input.BaseInput;
 import nl.anlizi.agri.pfsc.transfer.output.PriceQuotationPageListOutput;
+import nl.anlizi.agri.pfsc.util.ElasticsearchUtil;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.http.HttpHeaders;
 import org.apache.http.entity.ContentType;
 import org.springframework.stereotype.Service;
 import org.zheos.elasticsearch.config.ElasticsearchProperties;
-import org.zheos.elasticsearch.util.ElasticsearchUtil;
+import org.zheos.elasticsearch.model.entity.BulkRequestEntity;
 import org.zheos.http.util.HttpUtil;
 
 import javax.annotation.Resource;
@@ -19,7 +20,9 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * 获取全国农业信息网服务类
@@ -33,6 +36,9 @@ public class PfscServiceImpl implements PfscService {
 
     @Resource
     private ElasticsearchProperties elasticsearchConfig;
+
+    @Resource
+    private ElasticsearchUtil elasticsearchUtil;
 
     /**
      * 爬虫获取全国农业信息网
@@ -61,28 +67,18 @@ public class PfscServiceImpl implements PfscService {
             String timeFormat = DateFormatUtils.format(new Date(), ApplicationConstant.DATETIME_FORMAT);
             PriceQuotationPageListOutput outputPage = HttpUtil.post(ApplicationConstant.PFSC_URL, input, PriceQuotationPageListOutput.class, headerMap());
             log.warn("获得数据量：{}", outputPage.getContent().getList().size());
-            outputPage.getContent().getList().forEach(output -> {
-                Map<String, Object> paramMap = JSON.parseObject(JSON.toJSONString(output), Map.class);
+            List<BulkRequestEntity> insertList = outputPage.getContent().getList().stream().map(entity -> {
+                Map<String, Object> paramMap = JSON.parseObject(JSON.toJSONString(entity), Map.class);
                 paramMap.put(ApplicationConstant.CREATE_TIME, new Date().getTime());
                 paramMap.put(ApplicationConstant.CREATE_DATE, timeFormat);
-                try {
-                    ElasticsearchUtil.addStrict(elasticsearchConfig.getMetadataIndex(), output.getId(), paramMap);
-                } catch (Exception e) {
-                    log.error("elastic插入数据异常", e);
-                }
-            });
-//            List<BulkRequestEntity> insertList = outputPage.getContent().getList().stream().map(entity -> {
-//                Map<String, Object> paramMap = JSON.parseObject(JSON.toJSONString(entity), Map.class);
-//                paramMap.put(ApplicationConstant.CREATE_TIME, new Date().getTime());
-//                paramMap.put(ApplicationConstant.CREATE_DATE, timeFormat);
-//                return new BulkRequestEntity(elasticsearchConfig.getMetadataIndex(), entity.getId(), paramMap);
-//            }).collect(Collectors.toList());
-//            try {
-//                ElasticsearchUtil.addBatch(insertList);
-//            } catch (Exception e) {
-//                log.error("elastic插入数据异常", e);
-//                return true;
-//            }
+                return new BulkRequestEntity(elasticsearchConfig.getMetadataIndex(), entity.getId(), paramMap);
+            }).collect(Collectors.toList());
+            try {
+                elasticsearchUtil.addBatch(insertList);
+            } catch (Exception e) {
+                log.error("elastic插入数据异常", e);
+                return true;
+            }
             return outputPage.getContent().getIsLastPage();
         } catch (IOException e) {
             log.error("农业信息网爬取失败IOException:{}", input, e);
@@ -94,20 +90,6 @@ public class PfscServiceImpl implements PfscService {
 
     private Map<String, String> headerMap() {
         Map<String, String> map = new HashMap<>(16);
-//        map.put("access-control-allow-credentials", "true");
-//        map.put("access-control-allow-origin", "chrome-extension://fhbjgbiflinjbdggehcddcbncdddomop");
-//        map.put("cache-control", "no-cache, no-store, max-age=0, must-revalidate\n");
-//        map.put("connection", "keep-alive\n");
-//        map.put("content-encoding", "gzip");
-//        map.put("content-type", "application/json;charset=UTF-8");
-//        map.put("expires", "0");
-//        map.put("pragma", "no-cache\n");
-//        map.put("server", "nginx/1.16.0");
-//        map.put("transfer-encoding", "chunked");
-//        map.put("vary", "accept-encoding,origin,access-control-request-headers,access-control-request-method,accept-encoding");
-//        map.put("x-content-type-options", "nosniff");
-//        map.put("x-frame-options", "DENY");
-//        map.put("x-xss-protection", "1; mode=block");
         map.put("User-Agent", "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.116 Safari/537.36");
         map.put("Accept-Language", "zh-CN,zh;q=0.8");
         map.put(HttpHeaders.CONTENT_TYPE, ContentType.APPLICATION_JSON.toString());

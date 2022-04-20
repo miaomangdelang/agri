@@ -12,7 +12,7 @@ import javax.annotation.Resource;
  * @date 2022/04/18 22:19
  */
 @SpringBootTest
-//@ActiveProfiles("develop")
+@ActiveProfiles("develop")
 public class PfscServiceTest {
 
     @Resource
