@@ -5,7 +5,7 @@ spring:
 zheos:
   elasticsearch:
     clusterName: docker-cluster
-    metadataIndex: pfsc
+    metadataIndex: pfsc-develop
     urlList:
       - 192.168.1.53:9200
 cron:
