@@ -1,0 +1,169 @@
+{
+  "settings": {
+    "index": {
+      "number_of_shards": "1"
+    }
+  },
+  "mappings": {
+    "properties": {
+      "pageable": {
+        "type": "boolean"
+      },
+      "pageNum": {
+        "type": "integer"
+      },
+      "pageSize": {
+        "type": "integer"
+      },
+      "id": {
+        "type": "keyword"
+      },
+      "updateDate": {
+        "type": "keyword"
+      },
+      "updaterId": {
+        "type": "keyword"
+      },
+      "updaterName": {
+        "type": "keyword"
+      },
+      "remark": {
+        "type": "keyword"
+      },
+      "marketId": {
+        "type": "keyword"
+      },
+      "marketCode": {
+        "type": "keyword"
+      },
+      "marketName": {
+        "type": "keyword"
+      },
+      "szsmMarketName": {
+        "type": "keyword"
+      },
+      "provinceCode": {
+        "type": "integer"
+      },
+      "provinceName": {
+        "type": "keyword"
+      },
+      "areaCode": {
+        "type": "integer"
+      },
+      "areaName": {
+        "type": "keyword"
+      },
+      "reportId": {
+        "type": "keyword"
+      },
+      "meteringUnit": {
+        "type": "keyword"
+      },
+      "minimumPrice": {
+        "type": "double"
+      },
+      "middlePrice": {
+        "type": "double"
+      },
+      "highestPrice": {
+        "type": "double"
+      },
+      "finalPrice": {
+        "type": "double"
+      },
+      "tradingVolume": {
+        "type": "keyword"
+      },
+      "totalPrice": {
+        "type": "keyword"
+      },
+      "producePlace": {
+        "type": "keyword"
+      },
+      "salePlace": {
+        "type": "keyword"
+      },
+      "fluctuate": {
+        "type": "keyword"
+      },
+      "tradingDate": {
+        "type": "keyword"
+      },
+      "approvalDate": {
+        "type": "keyword"
+      },
+      "approvalState": {
+        "type": "keyword"
+      },
+      "exceptionType": {
+        "type": "keyword"
+      },
+      "varietyId": {
+        "type": "keyword"
+      },
+      "varietyCode": {
+        "type": "keyword"
+      },
+      "varietyName": {
+        "type": "keyword"
+      },
+      "inStorageTime": {
+        "type": "date",
+        "format": "yyyy-MM-dd HH:mm:ss||yyyy-MM-dd||epoch_millis"
+      },
+      "reportTime": {
+        "type": "keyword"
+      },
+      "finalState": {
+        "type": "keyword"
+      },
+      "marketType": {
+        "type": "keyword"
+      },
+      "marketCategory": {
+        "type": "keyword"
+      },
+      "unitType": {
+        "type": "keyword"
+      },
+      "isKeyCollect": {
+        "type": "keyword"
+      },
+      "varietyTypeId": {
+        "type": "keyword"
+      },
+      "varietyTypeCode": {
+        "type": "keyword"
+      },
+      "varietyTypeName": {
+        "type": "keyword"
+      },
+      "farmUserId": {
+        "type": "keyword"
+      },
+      "farmUserName": {
+        "type": "keyword"
+      },
+      "avgPrice": {
+        "type": "keyword"
+      },
+      "cityAvgPrice": {
+        "type": "keyword"
+      },
+      "countryAvgPrice": {
+        "type": "keyword"
+      },
+      "counts": {
+        "type": "keyword"
+      },
+      "createTime": {
+        "type": "long"
+      },
+      "createDate": {
+        "type": "date",
+        "format": "yyyy-MM-dd HH:mm:ss||yyyy-MM-dd||epoch_millis"
+      }
+    }
+  }
+}
