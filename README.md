@@ -1,5 +1,6 @@
 ### 爬虫获取全国农业信息网 ###
 
 ```shell
-docker build -t pfsc:1.0.0 ./Dockerfile
+# 构建镜像
+docker build -t pfsc:1.0.0 .
 ```

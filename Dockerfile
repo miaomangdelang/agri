@@ -1,5 +1,5 @@
 # java8运行环境
-FROM java:8
+FROM openjdk:8-jdk-alpine
 # 作者名称
 MAINTAINER Joing.Yao
 
