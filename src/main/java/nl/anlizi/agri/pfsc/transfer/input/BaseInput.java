@@ -24,4 +24,14 @@ public class BaseInput implements Serializable {
      * 每页数量
      */
     private Integer pageSize;
+
+    /**
+     * 是否完成
+     */
+    private boolean isGetEnd;
+
+    /**
+     * 当前页是否完成
+     */
+    private boolean isGetPageSuccess;
 }
