@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-<!--    <property name="LOG_HOME" value="~/appLog/pfsc"/>-->
-    <property name="LOG_HOME" value="/home/appLog/pfsc"/>
+    <property name="LOG_HOME" value="~/appLog/pfsc"/>
+<!--    <property name="LOG_HOME" value="/home/appLog/pfsc"/>-->
     <property name="APP_NAME" value="pfsc"/>
     <property name="PATTERN" value="[%d{yyyy-MM-dd HH:mm:ss.SSS}] %-5level %thread [%logger{30}.%method:%line] - %msg%n"/>
 

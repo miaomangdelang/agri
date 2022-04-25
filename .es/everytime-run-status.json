@@ -1,0 +1,20 @@
+{
+  "mappings": {
+    "properties": {
+      "indexName":{
+        "type": "keyword"
+      },
+      "isSuccess": {
+        "type": "boolean"
+      },
+      "updateTime": {
+        "format": "yyyy-MM-dd HH:mm:ss",
+        "type": "date"
+      },
+      "updateDate": {
+        "format": "yyyy-MM-dd",
+        "type": "date"
+      }
+    }
+  }
+}

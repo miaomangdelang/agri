@@ -29,8 +29,33 @@ public class ApplicationConstant {
     public static final String CREATE_DATE = "createDate";
 
     /**
-     * 格式化时间
+     * 格式化时间 date
      */
-    public static String DATETIME_FORMAT = "yyyy-MM-dd";
+    public static String DATE_FORMAT = "yyyy-MM-dd";
+
+    /**
+     * 状态索引
+     */
+    public static final String EVERYONE_RUN_STATUS = "everyone-run-status";
+
+    /**
+     * 格式化时间 datetime
+     */
+    public static final String DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
+
+    /**
+     * 状态更新时间字段名称
+     */
+    public static final String UPDATE_DATE = "updateDate";
+
+    /**
+     * 状态是否成功字段名称
+     */
+    public static final String IS_SUCCESS = "isSuccess";
+
+    /**
+     * 状态索引名称字段
+     */
+    public static final String INDEX_NAME = "indexName";
 
 }
