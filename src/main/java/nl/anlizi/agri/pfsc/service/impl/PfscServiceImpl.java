@@ -51,7 +51,10 @@ public class PfscServiceImpl implements PfscService {
     public void reptilePfsc() {
         String dateFormat = DateFormatUtils.format(new Date(), ApplicationConstant.DATE_FORMAT);
         // 校验今天是否成功
-        BoolQueryBuilder filterQuery = QueryBuilders.boolQuery().filter(QueryBuilders.boolQuery().must(QueryBuilders.termQuery(ApplicationConstant.UPDATE_DATE, dateFormat)).must(QueryBuilders.termQuery(ApplicationConstant.IS_SUCCESS, true)).must(QueryBuilders.termQuery(ApplicationConstant.INDEX_NAME, elasticsearchConfig.getMetadataIndex())));
+        BoolQueryBuilder filterQuery = QueryBuilders.boolQuery().filter(QueryBuilders.boolQuery()
+                .must(QueryBuilders.termQuery(ApplicationConstant.UPDATE_DATE, dateFormat))
+                .must(QueryBuilders.termQuery(ApplicationConstant.IS_SUCCESS, true))
+                .must(QueryBuilders.termQuery(ApplicationConstant.INDEX_NAME, elasticsearchConfig.getMetadataIndex())));
         SearchSourceBuilder query = new SearchSourceBuilder().query(filterQuery);
         Long queryCount = null;
         try {
@@ -65,7 +68,7 @@ public class PfscServiceImpl implements PfscService {
             return;
         }
         // 初始化第一页
-        BaseInput returnBaseInput = new BaseInput(1 , ApplicationConstant.DEFAULT_PAGE_SIZE, false, false);
+        BaseInput returnBaseInput = new BaseInput(1 , ApplicationConstant.DEFAULT_PAGE_SIZE, false, false, 0);
         while (!returnBaseInput.isGetEnd()) {
             log.warn("开始爬虫page：{}", returnBaseInput.getPageNum());
             reptilePageOne(returnBaseInput);
@@ -73,7 +76,9 @@ public class PfscServiceImpl implements PfscService {
             returnBaseInput.setPageNum(returnBaseInput.getPageNum() + 1);
         }
         String timeFormat = DateFormatUtils.format(new Date(), ApplicationConstant.DATE_TIME_FORMAT);
-        EveryoneRunStatus everyoneRunStatus = new EveryoneRunStatus(elasticsearchConfig.getMetadataIndex(), returnBaseInput.isGetEnd(), timeFormat, dateFormat);
+        // 统计今日总数
+        int dayCount = returnBaseInput.getPageSize() * (returnBaseInput.getPageNum() - 1) + returnBaseInput.getCurrentCount();
+        EveryoneRunStatus everyoneRunStatus = new EveryoneRunStatus(elasticsearchConfig.getMetadataIndex(), returnBaseInput.isGetEnd(), timeFormat, dateFormat, dayCount);
         try {
             elasticsearchUtil.add(ApplicationConstant.EVERYONE_RUN_STATUS, String.valueOf(System.currentTimeMillis()), JSON.parseObject(JSON.toJSONString(everyoneRunStatus), Map.class));
         } catch (IOException e) {
@@ -92,7 +97,8 @@ public class PfscServiceImpl implements PfscService {
         try {
             String timeFormat = DateFormatUtils.format(new Date(), ApplicationConstant.DATE_FORMAT);
             PriceQuotationPageListOutput outputPage = HttpUtil.post(ApplicationConstant.PFSC_URL, input, PriceQuotationPageListOutput.class, headerMap());
-            log.warn("获得数据量：{}", outputPage.getContent().getList().size());
+            int size = outputPage.getContent().getList().size();
+            log.warn("获得数据量：{}", size);
             List<BulkRequestEntity> insertList = outputPage.getContent().getList().stream().map(entity -> {
                 Map<String, Object> paramMap = JSON.parseObject(JSON.toJSONString(entity), Map.class);
                 paramMap.put(ApplicationConstant.CREATE_TIME, new Date().getTime());
@@ -108,6 +114,7 @@ public class PfscServiceImpl implements PfscService {
             }
             input.setGetEnd(outputPage.getContent().getIsLastPage());
             input.setGetPageSuccess(true);
+            input.setCurrentCount(size);
             return;
         } catch (IOException e) {
             log.error("农业信息网爬取失败IOException:{}", input, e);

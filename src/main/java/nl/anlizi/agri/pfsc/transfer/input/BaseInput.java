@@ -34,4 +34,9 @@ public class BaseInput implements Serializable {
      * 当前页是否完成
      */
     private boolean isGetPageSuccess;
+
+    /**
+     * 实际数量
+     */
+    private Integer currentCount;
 }

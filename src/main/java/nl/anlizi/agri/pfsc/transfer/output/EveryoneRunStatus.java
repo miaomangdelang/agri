@@ -35,4 +35,9 @@ public class EveryoneRunStatus implements Serializable {
      */
     private String updateDate;
 
+    /**
+     * 今日数量
+     */
+    private Integer dayCount;
+
 }
