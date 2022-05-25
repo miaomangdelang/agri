@@ -56,15 +56,15 @@ public class PfscServiceImpl implements PfscService {
                 .must(QueryBuilders.termQuery(ApplicationConstant.IS_SUCCESS, true))
                 .must(QueryBuilders.termQuery(ApplicationConstant.INDEX_NAME, elasticsearchConfig.getMetadataIndex())));
         SearchSourceBuilder query = new SearchSourceBuilder().query(filterQuery);
-        Long queryCount = null;
+        List<Map<String, Object>> queryCount;
         try {
-            queryCount = elasticsearchUtil.count(ApplicationConstant.EVERYONE_RUN_STATUS, query);
+            queryCount = elasticsearchUtil.search(ApplicationConstant.EVERYONE_RUN_STATUS, query);
         } catch (IOException e) {
             log.error("查询状态出错：{}", dateFormat, e);
             return;
         }
-        if (queryCount > 0) {
-            log.warn("今天已成功：{}", dateFormat);
+        if (queryCount.size() > 0) {
+            log.warn("今天已尝试过：{}", dateFormat);
             return;
         }
         // 初始化第一页
@@ -78,7 +78,9 @@ public class PfscServiceImpl implements PfscService {
         String timeFormat = DateFormatUtils.format(new Date(), ApplicationConstant.DATE_TIME_FORMAT);
         // 统计今日总数
         int dayCount = returnBaseInput.getPageSize() * (returnBaseInput.getPageNum() - 1) + returnBaseInput.getCurrentCount();
-        EveryoneRunStatus everyoneRunStatus = new EveryoneRunStatus(elasticsearchConfig.getMetadataIndex(), returnBaseInput.isGetEnd(), timeFormat, dateFormat, dayCount);
+        // 是否全部成功
+        boolean isSuccess = returnBaseInput.isGetEnd() && returnBaseInput.isGetPageSuccess();
+        EveryoneRunStatus everyoneRunStatus = new EveryoneRunStatus(elasticsearchConfig.getMetadataIndex(), isSuccess, timeFormat, dateFormat, dayCount);
         try {
             elasticsearchUtil.add(ApplicationConstant.EVERYONE_RUN_STATUS, String.valueOf(System.currentTimeMillis()), JSON.parseObject(JSON.toJSONString(everyoneRunStatus), Map.class));
         } catch (IOException e) {
@@ -91,7 +93,6 @@ public class PfscServiceImpl implements PfscService {
      * 获取一页信息
      *
      * @param input 分页信息 pageNum、pageSize
-     * @return 是否获取完毕
      */
     private void reptilePageOne(BaseInput input) {
         try {
@@ -121,7 +122,7 @@ public class PfscServiceImpl implements PfscService {
         } catch (URISyntaxException e) {
             log.error("农业信息网爬取失败URISyntaxException:{}", input, e);
         }
-        input.setGetEnd(true);
+        input.setGetPageSuccess(false);
     }
 
     private Map<String, String> headerMap() {

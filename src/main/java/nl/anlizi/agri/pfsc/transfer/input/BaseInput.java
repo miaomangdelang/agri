@@ -31,7 +31,7 @@ public class BaseInput implements Serializable {
     private boolean isGetEnd;
 
     /**
-     * 当前页是否完成
+     * 当前页是否成功
      */
     private boolean isGetPageSuccess;
 
